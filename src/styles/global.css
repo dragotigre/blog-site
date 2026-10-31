@@ -69,3 +69,6 @@ html { scrollbar-gutter: stable; }
 @media (min-width: 1024px) {
   html { overflow: hidden; scrollbar-gutter: auto; }
 }
+
+/* 전체 글자에 붙어 있던 거의 보이지 않는 그림자는 애니메이션 때마다 다시 그려져 끊김의 원인이 되므로 제거 */
+html { text-shadow: none; }
