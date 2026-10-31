@@ -22,24 +22,24 @@ configuration:
       code: JetBrains Mono
     colors:
       lightMode:
-        light: "#f7f9fc"
-        lightgray: "#e3e9f3"
-        gray: "#b3bdd0"
-        darkgray: "#4a5670"
-        dark: "#1f2a40"
-        secondary: "#4c78d8"
-        tertiary: "#7fb7d8"
-        highlight: rgba(76, 120, 216, 0.12)
-        textHighlight: "#fff6b588"
+        light: "#fbf8f3"
+        lightgray: "#ebe5da"
+        gray: "#b9b0a2"
+        darkgray: "#5f5a52"
+        dark: "#37352f"
+        secondary: "#b5683a"
+        tertiary: "#8fa88e"
+        highlight: rgba(181, 104, 58, 0.10)
+        textHighlight: "#fde9a888"
       darkMode:
-        light: "#121826"
-        lightgray: "#263148"
-        gray: "#5a6785"
-        darkgray: "#c4cde0"
-        dark: "#eef2fa"
-        secondary: "#8fb1f7"
-        tertiary: "#7fc7d4"
-        highlight: rgba(143, 177, 247, 0.14)
+        light: "#1f1d1a"
+        lightgray: "#33302b"
+        gray: "#6d675e"
+        darkgray: "#d2cbbf"
+        dark: "#f4f0e8"
+        secondary: "#e0a173"
+        tertiary: "#9cb79c"
+        highlight: rgba(224, 161, 115, 0.12)
         textHighlight: "#b3aa0288"
 plugins:
   - source: "@quartz-community/created-modified-date"
@@ -132,12 +132,12 @@ plugins:
   - source: "@quartz-community/tag-page"
     enabled: true
   - source: "@quartz-community/explorer"
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 50
   - source: "@quartz-community/graph"
-    enabled: true
+    enabled: false
     layout:
       position: right
       priority: 10
@@ -150,7 +150,7 @@ plugins:
       groupOptions:
         grow: true
   - source: "@quartz-community/backlinks"
-    enabled: true
+    enabled: false
     layout:
       position: right
       priority: 50
@@ -161,11 +161,13 @@ plugins:
       priority: 10
   - source: "@quartz-community/content-meta"
     enabled: true
+    options:
+      showReadingTime: false
     layout:
       position: beforeBody
       priority: 20
   - source: "@quartz-community/tag-list"
-    enabled: false
+    enabled: true
     layout:
       position: beforeBody
       priority: 30
@@ -203,14 +205,21 @@ plugins:
   - source: "@quartz-community/footer"
     enabled: true
     options:
-      links:
-        GitHub: https://github.com/jackyzha0/quartz
-        Discord Community: https://discord.gg/cRFFHYye7t
+      links: {}
     layout:
       position: footer
       priority: 50
   - source: "@quartz-community/recent-notes"
-    enabled: false
+    enabled: true
+    options:
+      title: "최근 글"
+      limit: 12
+      showTags: true
+      hideFolderPages: true
+      hideTagPages: true
+    layout:
+      position: afterBody
+      priority: 20
   - source: "@quartz-community/spacer"
     enabled: true
     options: {}

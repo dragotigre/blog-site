@@ -1,3 +1,69 @@
 @use "./variables.scss" as *;
 
-// put your custom CSS here!
+// 노션 페이지 느낌: 따뜻한 크림 바탕, 넓은 여백, 얇은 선, 둥근 카드
+
+// 전체
+body { -webkit-font-smoothing: antialiased; }
+.center { max-width: 740px; margin-inline: auto; }
+article { line-height: 1.85; font-size: 1.02rem; }
+article p { margin: 0.55rem 0; }
+
+// 제목
+.article-title, h1.article-title, article > h1 {
+  font-size: 2.35rem; font-weight: 800; letter-spacing: -0.02em; margin: 0.3rem 0 0.4rem;
+}
+article h2 { font-size: 1.55rem; font-weight: 700; margin-top: 2.2rem; padding-bottom: 0.3rem; border-bottom: 1px solid var(--lightgray); }
+article h3 { font-size: 1.25rem; font-weight: 700; margin-top: 1.6rem; }
+
+// 링크: 노션처럼 연한 밑줄
+a.internal, article a { color: var(--dark); text-decoration: underline; text-decoration-color: var(--gray); text-underline-offset: 3px; background: none; }
+a.internal:hover, article a:hover { text-decoration-color: var(--secondary); color: var(--secondary); }
+a.internal.tag-link { text-decoration: none; }
+
+// 날짜·메타
+.content-meta { color: var(--gray); font-size: 0.88rem; margin-bottom: 1.2rem; }
+
+// 인용문·콜아웃
+article blockquote { border-left: 3px solid var(--secondary); background: var(--highlight); padding: 0.4rem 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0; }
+.callout { border-radius: 10px; border: 1px solid var(--lightgray); }
+
+// 코드·표
+article code { background: var(--lightgray); border-radius: 5px; padding: 0.1rem 0.35rem; }
+article table { border-collapse: collapse; }
+article th { background: var(--highlight); }
+article td, article th { border-bottom: 1px solid var(--lightgray); padding: 0.5rem 0.8rem; }
+
+// 왼쪽 사이드: 가볍게
+.sidebar.left { padding-top: 3rem; }
+.page-title { font-size: 1.25rem; font-weight: 800; margin: 0; }
+.search .search-button { border-radius: 10px; background: var(--highlight); border: none; }
+
+// 최근 글 목록: 카드
+.recent-notes { margin-top: 2.5rem; }
+.recent-notes h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.8rem; }
+.recent-notes > ul.recent-ul { display: grid; gap: 0.9rem; list-style: none; padding: 0; margin: 0; }
+.recent-notes li.recent-li {
+  border: 1px solid var(--lightgray); border-radius: 12px; padding: 1rem 1.2rem;
+  background: var(--light); transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.recent-notes li.recent-li:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(55, 53, 47, 0.10); }
+.recent-notes .section h3 { margin: 0 0 0.25rem; font-size: 1.1rem; }
+.recent-notes .section h3 a { text-decoration: none; }
+.recent-notes .desc { color: var(--darkgray); font-size: 0.93rem; }
+.recent-notes .meta { color: var(--gray); font-size: 0.82rem; margin: 0.2rem 0; }
+.tags .tag-link, a.tag-link { background: var(--highlight); color: var(--secondary); border-radius: 999px; padding: 0.08rem 0.65rem; font-size: 0.8rem; }
+
+// 폴더·태그 목록 페이지
+.page-listing .section-li { border-bottom: 1px solid var(--lightgray); padding: 0.8rem 0; }
+.page-listing .section .meta { color: var(--gray); }
+
+/* 속성 상자 숨김 */
+.properties, .note-properties, details.properties, [class*="properties"] { display: none !important; }
+
+/* 404 페이지는 최근 글에서 제외 */
+.recent-notes li:has(a[href$="/404"]), .recent-notes li:has(a[href$="404.html"]), .recent-notes li:has(a[href="./404"]) { display: none !important; }
+
+/* 콜아웃 색을 따뜻한 톤으로 */
+.callout { --color: #b5683a !important; --border: rgba(181,104,58,0.25) !important; --bg: #f4e9df !important; }
+.callout .callout-title, .callout .callout-title-inner, .callout .fold-callout-icon, .callout .callout-icon { color: #b5683a !important; }
+:root[saved-theme="dark"] .callout { --bg: #2b2621 !important; }
