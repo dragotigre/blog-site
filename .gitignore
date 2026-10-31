@@ -26,3 +26,4 @@ Markdown style guide.md
 src/content/posts/*
 src/content/spec/about.md
 public/album/*
+public/img/*

@@ -6,24 +6,14 @@ const theme = themeConfig.appearance.theme
 
 <script is:inline define:vars={{ theme }}>
   function updateTheme(theme) {
-    // Check if theme is system
     if (theme === 'system') {
-      // Check OS preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      document.documentElement.classList.toggle('dark', prefersDark)
+      document.documentElement.classList.toggle('dark', window.matchMedia('(prefers-color-scheme: dark)').matches)
       return
     }
-    // Set theme directly
     document.documentElement.classList.toggle('dark', theme === 'dark')
   }
-
-  // Initial theme setup
-  updateTheme(theme)
-
-  // Listen for OS theme changes
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (theme === 'system') {
-      document.documentElement.classList.toggle('dark', e.matches)
-    }
-  })
+  var saved = null
+  try { saved = localStorage.getItem('theme') } catch (e) {}
+  // 방문자가 직접 고른 모드가 있으면 그것을, 없으면 기본 설정(밝은 모드)을 사용
+  updateTheme(saved === 'dark' || saved === 'light' ? saved : theme)
 </script>

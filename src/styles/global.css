@@ -72,3 +72,22 @@ html { scrollbar-gutter: stable; }
 
 /* 전체 글자에 붙어 있던 거의 보이지 않는 그림자는 애니메이션 때마다 다시 그려져 끊김의 원인이 되므로 제거 */
 html { text-shadow: none; }
+
+/* 글 안 사진 */
+.post-fig { margin: 1.6rem auto; padding: .5rem; width: fit-content; max-width: 100%; background: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--uno-colors-primary) 18%, transparent); box-shadow: 0 6px 16px rgba(90, 70, 54, .08); }
+.post-fig a { display: block; padding: 0 !important; text-decoration: none !important; background: none !important; color: inherit !important; cursor: zoom-in; }
+.post-fig img { display: block; max-width: 100%; height: auto; margin: 0; }
+.post-fig figcaption { padding: .5rem .15rem 0; font-size: .85rem; text-align: center; opacity: .8; }
+
+/* ---- 라이트/다크 공통 색 변수 ---- */
+:root { --paper: #fffdf9; --paper-2: #efe7da; --code-bg: #f3e8da; --code-fg: #b5683a; }
+html.dark { --paper: #2a2722; --paper-2: #35312b; --code-bg: #3a3029; --code-fg: #e0a173; }
+:where(:not(pre):not(a) > code) { background-color: var(--code-bg) !important; color: var(--code-fg) !important; }
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+html.dark .pa-card, html.dark .post-fig { box-shadow: 0 6px 16px rgba(0, 0, 0, .35); }
+html.dark #search mark, html.dark .pagefind-ui mark { color: var(--uno-colors-primary); }
+
+/* 화면 모드 전환 버튼 */
+.theme-toggle { background: none; border: 0; padding: 0; cursor: pointer; color: inherit; display: inline-flex; align-items: center; }

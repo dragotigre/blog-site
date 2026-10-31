@@ -44,6 +44,15 @@ const dark = themeConfig.appearance.theme === 'dark'
     </footer>
 
     <script>
+      // 화면 모드 전환: 선택을 저장하고, 페이지 전환(swup) 후에도 동작하도록 문서 전체에 위임
+      document.addEventListener('click', (e) => {
+        const btn = (e.target as HTMLElement).closest?.('[data-theme-toggle]')
+        if (!btn) return
+        const dark = document.documentElement.classList.toggle('dark')
+        try { localStorage.setItem('theme', dark ? 'dark' : 'light') } catch {}
+      })
+    </script>
+    <script>
       // 공유 버튼: 페이지 전환(swup) 후에도 동작하도록 문서 전체에 위임
       document.addEventListener('click', async (e) => {
         const btn = (e.target as HTMLElement).closest?.('[data-share]') as HTMLElement | null

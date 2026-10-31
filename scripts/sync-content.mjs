@@ -45,7 +45,54 @@ function list(v) {
   return v.replace(/^\[|\]$/g, '').split(',').map(s => unquote(s.trim())).filter(Boolean)
 }
 
+
+// ---- 본문 사진: 옵시디언 ![[사진.jpg|캡션]] / ![[사진.jpg|300]] / ![](사진.jpg) -> 확대 가능한 figure ----
+const IMG_EXT = /\.(jpe?g|png|webp|gif|bmp)$/i
+const astroCfg = fs.existsSync(path.join(root, 'astro.config.ts')) ? fs.readFileSync(path.join(root, 'astro.config.ts'), 'utf8') : ''
+const BASE = ((astroCfg.match(/base:\s*'([^']*)'/) || [])[1] ?? '').replace(/\/$/, '')
+const imgOut = path.join(root, 'public/img')
+const imageIndex = new Map()
+function keyOf(name) {
+  return path.basename(name.replace(/\\/g, '/')).replace(IMG_EXT, '').normalize('NFC').toLowerCase()
+}
+function escAttr(t) {
+  return t.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+function figureFor(target, extra) {
+  const key = keyOf(target)
+  const found = imageIndex.get(key)
+  if (!found) {
+    console.warn(`[사진 없음] ${target} -> 블로그/글 폴더(또는 하위 폴더)에 넣어 주십시오`)
+    return ''
+  }
+  fs.mkdirSync(imgOut, { recursive: true })
+  const outName = `${path.basename(found).replace(IMG_EXT, '')}.jpg`
+  const dest = path.join(imgOut, outName)
+  if (!fs.existsSync(dest)) fs.copyFileSync(found, dest)
+  const url = `${BASE}/img/${encodeURIComponent(outName)}`
+  let cap = ''
+  let width = ''
+  const e = (extra || '').trim()
+  const wm = e.match(/^(\d+)(?:x\d+)?$/)
+  if (wm) width = ` style="max-width:${wm[1]}px"`
+  else cap = e
+  const c = escAttr(cap)
+  return `\n\n<figure class="post-fig"${width}><a href="${url}" data-lb data-title="${c}"><img src="${url}" alt="${c}" loading="lazy" /></a>${cap ? `<figcaption>${c}</figcaption>` : ''}</figure>\n\n`
+}
+function convertImages(text) {
+  return text
+    .replace(/!\[\[([^\]|]+?)(?:\|([^\]]*))?\]\]/g, (m, target, extra) =>
+      IMG_EXT.test(target.trim()) ? figureFor(target.trim(), extra) : '')
+    .replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, (m, alt, url) => {
+      if (/^(https?:|data:|\/)/i.test(url)) return m
+      let u = url
+      try { u = decodeURIComponent(url) } catch {}
+      return IMG_EXT.test(u) ? figureFor(u, alt) : m
+    })
+}
+
 function convertBody(body) {
+  body = convertImages(body)
   return body
     .split('\n')
     .filter(l => !/!\[\[/.test(l))
@@ -72,6 +119,14 @@ function clearDir(dir) {
 }
 
 clearDir(postsDir)
+clearDir(imgOut)
+for (const f of walk(vault)) {
+  if (!IMG_EXT.test(f)) continue
+  const rel0 = path.relative(vault, f).split(path.sep)
+  if (rel0[0] === '사진') continue // 앨범 사진은 본문 임베드 대상이 아님
+  const k = keyOf(f)
+  if (!imageIndex.has(k)) imageIndex.set(k, f)
+}
 const files = walk(vault).filter(f => f.endsWith('.md'))
 let posts = 0
 let about = false

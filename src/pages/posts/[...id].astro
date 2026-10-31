@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro'
 import Comments from '~/components/Comments.astro'
+import AlbumLightbox from '~/components/AlbumLightbox.astro'
 import ShareButtons from '~/components/ShareButtons.astro'
 import Pagination from '~/components/Pagination.astro'
 import SiteSeo from '~/components/SiteSeo.astro'
@@ -64,6 +65,7 @@ function getUrl(id: string) {
     showPageCount={false}
   />
   <!-- BUG 这里使用 client:visible 会导致构建失败。ref: https://github.com/withastro/astro/issues/7329 -->
+  <AlbumLightbox />
   <ShareButtons title={entry.data.title} url={pageUrl} />
   {related.length > 0 && (
     <section class="related">

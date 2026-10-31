@@ -25,6 +25,7 @@ const optimizedImage = await getOptimizedImageURL()
 
 const seoLinks = [
   { rel: 'icon', href: withBase('/favicon.svg'), type: 'image/svg+xml' },
+  { rel: 'apple-touch-icon', href: withBase('/apple-touch-icon.png') },
   {
     rel: 'alternate',
     type: 'application/rss+xml',
