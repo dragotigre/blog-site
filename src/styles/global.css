@@ -62,3 +62,10 @@ main a, article a, h2 a { color: var(--uno-colors-primary); }
 .share { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: 2rem; font-size: .85rem; }
 .share button, .share a.share-btn { padding: .3rem .8rem; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--uno-colors-primary) 30%, transparent); background: transparent; color: var(--uno-colors-primary); cursor: pointer; text-decoration: none !important; font: inherit; font-size: .8rem; }
 .share button:hover, .share a.share-btn:hover { background: var(--uno-colors-primary); color: var(--uno-colors-background); }
+
+/* 페이지마다 길이가 달라 세로 스크롤바가 생겼다 사라지며 화면이 흔들리는 현상 방지 */
+html { scrollbar-gutter: stable; }
+/* 넓은 화면은 본문(main)이 자체 스크롤하므로 문서 스크롤을 막아, 전환 애니메이션 중 스크롤바가 깜빡이지 않게 함 */
+@media (min-width: 1024px) {
+  html { overflow: hidden; scrollbar-gutter: auto; }
+}
