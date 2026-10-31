@@ -1,0 +1,43 @@
+:root {
+  --uno-colors-primary: theme('colors.primary');
+  --uno-colors-background: theme('colors.background');
+  --uno-fonts-ui: theme('fontFamily.ui');
+  --uno-colors-shadow: theme('colors.shadow');
+}
+html {
+  --at-apply: antialiased;
+  --at-apply: 'bg-background c-primary font-ui text-shadow-color-shadow';
+
+  text-shadow: 1px 1px 1px var(--uno-colors-shadow);
+  background-size: 7px 7px;
+  background-image: linear-gradient(to right, var(--uno-colors-shadow) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--uno-colors-shadow) 1px, transparent 1px);
+}
+
+:where(a):not(.not-underline-hover) {
+  --at-apply: 'p-1.5px';
+  --at-apply: 'decoration-underline decoration-0.1em decoration-offset-2px';
+  --at-apply: 'ease-in-out duration-300ms';
+  --at-apply: 'hover:(c-background bg-primary decoration-primary)';
+}
+
+/* 본문 색상을 테마 색(갈색 계열)으로 통일 */
+.prose {
+  --un-prose-body: var(--uno-colors-primary);
+  --un-prose-headings: var(--uno-colors-primary);
+  --un-prose-links: var(--uno-colors-primary);
+  --un-prose-lists: var(--uno-colors-primary);
+  --un-prose-bold: var(--uno-colors-primary);
+  --un-prose-counters: var(--uno-colors-primary);
+  --un-prose-bullets: var(--uno-colors-primary);
+  --un-prose-quotes: var(--uno-colors-primary);
+  --un-prose-quote-borders: color-mix(in srgb, var(--uno-colors-primary) 25%, transparent);
+  --un-prose-captions: var(--uno-colors-primary);
+  --un-prose-hr: color-mix(in srgb, var(--uno-colors-primary) 20%, transparent);
+  --un-prose-th-borders: color-mix(in srgb, var(--uno-colors-primary) 30%, transparent);
+  --un-prose-td-borders: color-mix(in srgb, var(--uno-colors-primary) 15%, transparent);
+  --prose-borders: color-mix(in srgb, var(--uno-colors-primary) 20%, transparent);
+  color: var(--uno-colors-primary);
+}
+.prose h1, .prose h2, .prose h3, .prose h4, .prose a, .prose strong, .prose th, .prose td, .prose blockquote { color: var(--uno-colors-primary); }
+main a, article a, h2 a { color: var(--uno-colors-primary); }

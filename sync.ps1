@@ -1,4 +1,4 @@
-﻿# 블로그 공개용 동기화: 초안이 아닌 글만 content 로 복사하고 GitHub 로 올립니다.
+﻿# 블로그 공개용 동기화: 초안이 아닌 글만 vault 폴더로 복사하고 GitHub 로 올립니다.
 # 사용: PowerShell 에서  .\sync.ps1   (올리지 않고 확인만: .\sync.ps1 -DryRun)
 param([switch]$DryRun)
 $ErrorActionPreference = "Stop"
@@ -6,11 +6,12 @@ $utf8 = New-Object System.Text.UTF8Encoding($false)
 $site  = $PSScriptRoot
 $vault = Split-Path $site -Parent
 $src   = Join-Path $vault "블로그"
-$dst   = Join-Path $site "content"
+$dst   = Join-Path $site "vault"
 if (-not (Test-Path $src)) { throw "블로그 폴더를 찾지 못했습니다: $src" }
 
-# content 비우기 (원본 볼트는 건드리지 않음)
+# vault 비우기 (원본 볼트는 건드리지 않음)
 if (Test-Path $dst) { Get-ChildItem $dst -Force | Remove-Item -Recurse -Force } else { New-Item -ItemType Directory $dst | Out-Null }
+New-Item -ItemType File (Join-Path $dst ".gitkeep") -Force | Out-Null
 
 function IsDraft([string]$text) {
   if ($text -match '(?s)^---\r?\n(.*?)\r?\n---') {
@@ -22,13 +23,7 @@ function IsDraft([string]$text) {
 $copied = 0; $skipped = 0
 Get-ChildItem $src -Recurse -File | ForEach-Object {
   $rel = $_.FullName.Substring($src.Length).TrimStart('\','/')
-  if ($_.Name -eq "블로그 홈.md") {
-    $text = [IO.File]::ReadAllText($_.FullName, $utf8)
-    $text = ($text -split "\r?\n" | Where-Object { $_ -notmatch '!\[\[' }) -join "`n"
-    [IO.File]::WriteAllText((Join-Path $dst "index.md"), $text, $utf8)
-    $script:copied++
-    return
-  }
+  if ($_.Name -eq "블로그 홈.md") { return }   # 이전 Quartz 용 홈 파일은 사용하지 않음
   if ($_.Extension -eq ".md") {
     $text = [IO.File]::ReadAllText($_.FullName, $utf8)
     if (IsDraft $text) { $script:skipped++; return }
@@ -62,8 +57,12 @@ if (-not $git) {
 
 & $git add -A
 & $git diff --cached --quiet
-if ($LASTEXITCODE -eq 0) { Write-Host "변경된 글이 없습니다."; exit 0 }
-& $git commit -m ("update " + (Get-Date -Format "yyyy-MM-dd HH:mm")) | Out-Null
+if ($LASTEXITCODE -ne 0) {
+  & $git commit -m ("update " + (Get-Date -Format "yyyy-MM-dd HH:mm")) | Out-Null
+}
+& $git fetch origin 2>$null
+$ahead = (& $git rev-list --count "origin/main..HEAD" 2>$null)
+if (-not $ahead -or [int]$ahead -eq 0) { Write-Host "변경된 글이 없습니다. 이미 모두 올라가 있습니다."; exit 0 }
 & $git pull --rebase origin main
 & $git push origin main
 if ($LASTEXITCODE -ne 0) {
