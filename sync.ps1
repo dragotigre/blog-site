@@ -48,10 +48,26 @@ if ($DryRun) { Write-Host "확인만 했습니다. 올리지 않았습니다."; 
 
 Set-Location $site
 if (-not (Test-Path (Join-Path $site ".git"))) { throw "아직 GitHub 저장소와 연결되지 않았습니다. 처음 한 번 연결이 필요합니다." }
-git add -A
-git diff --cached --quiet
+
+# git 찾기: 설치된 git 이 없으면 GitHub Desktop 에 포함된 git 을 사용
+$git = (Get-Command git -ErrorAction SilentlyContinue).Source
+if (-not $git) {
+  $c = Get-ChildItem "$env:LOCALAPPDATA\GitHubDesktop\app-*\resources\app\git\cmd\git.exe" -ErrorAction SilentlyContinue | Sort-Object FullName -Descending | Select-Object -First 1
+  if ($c) { $git = $c.FullName }
+}
+if (-not $git) {
+  Write-Host "git 을 찾지 못했습니다. 글은 복사되었으니 GitHub Desktop 에서 Commit 후 Push origin 을 눌러 주십시오."
+  exit 0
+}
+
+& $git add -A
+& $git diff --cached --quiet
 if ($LASTEXITCODE -eq 0) { Write-Host "변경된 글이 없습니다."; exit 0 }
-git commit -m ("update " + (Get-Date -Format "yyyy-MM-dd HH:mm")) | Out-Null
-git pull --rebase origin main
-git push origin main
+& $git commit -m ("update " + (Get-Date -Format "yyyy-MM-dd HH:mm")) | Out-Null
+& $git pull --rebase origin main
+& $git push origin main
+if ($LASTEXITCODE -ne 0) {
+  Write-Host "올리기에 실패했습니다. 글은 기록되었으니 GitHub Desktop 에서 Push origin 을 눌러 주십시오."
+  exit 1
+}
 Write-Host "올렸습니다. 잠시 뒤 사이트가 갱신됩니다."
