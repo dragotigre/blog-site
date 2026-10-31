@@ -1,0 +1,28 @@
+---
+import LayoutDefault from '~/layouts/LayoutDefault.astro'
+import { getAlbums, photoUrl } from '~/utils/albums'
+import { withBase } from '~/utils'
+import '~/styles/album.css'
+
+const { translate: t } = Astro.locals
+const albums = getAlbums()
+const base = withBase('')
+---
+
+<LayoutDefault>
+  <header flex="~ col gap-2">
+    <h1 class="post-title"><a class="not-prose">{t('Album')}</a></h1>
+    <div class="text-3.5">{albums.length}개의 앨범</div>
+  </header>
+  {albums.length === 0 && <p class="pa-empty">아직 앨범이 없습니다.</p>}
+  <div class="pa-grid">
+    {albums.map(a => (
+      <figure class="pa-card">
+        <a class="pa-link" href={withBase(`/album/${encodeURIComponent(a.name)}/`)}>
+          <div class="pa-img"><img src={photoUrl(base, a.name, a.cover.file)} alt={a.name} loading="lazy" /></div>
+          <figcaption><b>{a.name}</b><span>{a.photos.length}장</span></figcaption>
+        </a>
+      </figure>
+    ))}
+  </div>
+</LayoutDefault>

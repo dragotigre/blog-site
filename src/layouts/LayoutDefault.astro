@@ -44,6 +44,44 @@ const dark = themeConfig.appearance.theme === 'dark'
     </footer>
 
     <script>
+      // 앨범 사진 확대 보기: 페이지 전환(swup) 후에도 동작하도록 문서 전체에 위임
+      let lbList: HTMLAnchorElement[] = []
+      let lbIdx = 0
+      const byId = (id: string) => document.getElementById(id)
+      function lbShow(i: number) {
+        lbList = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[data-lb]'))
+        if (!lbList.length) return
+        lbIdx = (i + lbList.length) % lbList.length
+        const a = lbList[lbIdx]
+        const img = byId('pa-lb-img') as HTMLImageElement
+        img.src = a.href
+        img.alt = a.dataset.title || ''
+        byId('pa-lb-title')!.textContent = a.dataset.title || ''
+        byId('pa-lb-date')!.textContent = a.dataset.date || ''
+        const d = byId('pa-lb') as HTMLDialogElement
+        if (!d.open) d.showModal()
+      }
+      document.addEventListener('click', (e) => {
+        const t = e.target as HTMLElement
+        const a = t.closest?.('a[data-lb]') as HTMLAnchorElement | null
+        if (a) {
+          e.preventDefault()
+          e.stopPropagation()
+          lbShow(Array.from(document.querySelectorAll('a[data-lb]')).indexOf(a))
+          return
+        }
+        if (t.id === 'pa-lb-prev') lbShow(lbIdx - 1)
+        else if (t.id === 'pa-lb-next') lbShow(lbIdx + 1)
+        else if (t.id === 'pa-lb') (t as HTMLDialogElement).close()
+      }, true)
+      document.addEventListener('keydown', (e) => {
+        const d = byId('pa-lb') as HTMLDialogElement | null
+        if (!d || !d.open) return
+        if (e.key === 'ArrowLeft') lbShow(lbIdx - 1)
+        if (e.key === 'ArrowRight') lbShow(lbIdx + 1)
+      })
+    </script>
+    <script>
       document.addEventListener('animationend', removeAnimation, false)
       function removeAnimation() {
         document.documentElement.classList.remove('animation-prepared')

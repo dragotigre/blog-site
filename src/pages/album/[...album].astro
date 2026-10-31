@@ -1,0 +1,33 @@
+---
+import type { GetStaticPaths } from 'astro'
+import AlbumLightbox from '~/components/AlbumLightbox.astro'
+import LayoutDefault from '~/layouts/LayoutDefault.astro'
+import { getAlbums, photoUrl } from '~/utils/albums'
+import { withBase } from '~/utils'
+import '~/styles/album.css'
+
+export const getStaticPaths = (() => {
+  return getAlbums().map(a => ({ params: { album: a.name }, props: { album: a } }))
+}) satisfies GetStaticPaths
+
+const { album } = Astro.props
+const base = withBase('')
+---
+
+<LayoutDefault>
+  <header flex="~ col gap-2">
+    <h1 class="post-title"><a class="not-prose">{album.name}</a></h1>
+    <div class="text-3.5"><a href={withBase('/album/')}>← 앨범 목록</a> · 사진 {album.photos.length}장</div>
+  </header>
+  <div class="pa-grid">
+    {album.photos.map(p => (
+      <figure class="pa-card">
+        <a class="pa-link" href={photoUrl(base, album.name, p.file)} data-lb data-title={p.title} data-date={p.date}>
+          <div class="pa-img"><img src={photoUrl(base, album.name, p.file)} alt={p.title || album.name} loading="lazy" /></div>
+          <figcaption><b>{p.title}</b><span>{p.date}</span></figcaption>
+        </a>
+      </figure>
+    ))}
+  </div>
+  <AlbumLightbox />
+</LayoutDefault>

@@ -1,5 +1,6 @@
 export const LANGUAGES = {
   'ko-kr': {
+    Album: '앨범',
     Home: '홈',
     Posts: '글',
     Categories: '분류',
@@ -24,6 +25,7 @@ export const LANGUAGES = {
     next_post: '다음 글',
   },
   'zh-cn': {
+    Album: '相册',
     Home: '首页',
     Posts: '文章',
     Categories: '分类',
@@ -48,6 +50,7 @@ export const LANGUAGES = {
     next_post: '下一篇',
   },
   'en-us': {
+    Album: 'Album',
     Home: 'Home',
     Posts: 'Posts',
     Categories: 'Categories',
@@ -72,6 +75,7 @@ export const LANGUAGES = {
     next_post: 'Next post',
   },
   'zh-tw': {
+    Album: '相簿',
     Home: '首頁',
     Posts: '文章',
     Categories: '分類',
@@ -96,6 +100,7 @@ export const LANGUAGES = {
     next_post: '下一篇',
   },
   'ja-jp': {
+    Album: 'アルバム',
     Home: 'ホーム',
     Posts: '投稿',
     Categories: 'カテゴリー',

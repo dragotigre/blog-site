@@ -12,6 +12,13 @@ export const userConfig: Partial<UserConfig> = {
       { name: 'github', href: 'https://github.com/dragotigre' },
       { name: 'rss', href: '/atom.xml' },
     ],
+    navLinks: [
+      { name: 'Posts', href: '/' },
+      { name: 'Archive', href: '/archive' },
+      { name: 'Categories', href: '/categories' },
+      { name: 'Album', href: '/album' },
+      { name: 'About', href: '/about' },
+    ],
     categoryMap: [],
     footer: [
       '© %year <a target="_blank" href="%website">%author</a>',

@@ -101,10 +101,24 @@ for (const file of files) {
   posts++
 }
 
+// 사진 앨범: vault/사진/<앨범 이름>/*.jpg -> public/album/<앨범 이름>/
+const albumOut = path.join(root, 'public/album')
+clearDir(albumOut)
+let photos = 0
+for (const file of walk(path.join(vault, '사진'))) {
+  if (!/\.(jpe?g|png|webp|gif)$/i.test(file)) continue
+  const rel = path.relative(path.join(vault, '사진'), file).split(path.sep)
+  if (rel.length !== 2) continue // 앨범 폴더 바로 아래 사진만 사용
+  const dir = path.join(albumOut, rel[0])
+  fs.mkdirSync(dir, { recursive: true })
+  fs.copyFileSync(file, path.join(dir, rel[1]))
+  photos++
+}
+
 if (!about) {
   fs.mkdirSync(specDir, { recursive: true })
   if (!fs.existsSync(path.join(specDir, 'about.md'))) {
     fs.writeFileSync(path.join(specDir, 'about.md'), '---\ntitle: "소개"\npubDate: 2026-01-01\n---\n')
   }
 }
-console.log(`글 ${posts}편 변환${about ? ', 소개 페이지 갱신' : ''}`)
+console.log(`글 ${posts}편 변환${about ? ', 소개 페이지 갱신' : ''}, 사진 ${photos}장`)
