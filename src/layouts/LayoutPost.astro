@@ -4,12 +4,13 @@ import type { Post } from '~/types'
 
 interface Props {
   post: Post
+  detail?: boolean
 }
 
-const { post } = Astro.props
+const { post, detail = false } = Astro.props
 ---
 
 <article class="prose">
-  <PostMeta post={post} />
+  <PostMeta post={post} detail={detail} />
   <slot />
 </article>

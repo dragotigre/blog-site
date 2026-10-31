@@ -44,6 +44,28 @@ const dark = themeConfig.appearance.theme === 'dark'
     </footer>
 
     <script>
+      // 공유 버튼: 페이지 전환(swup) 후에도 동작하도록 문서 전체에 위임
+      document.addEventListener('click', async (e) => {
+        const btn = (e.target as HTMLElement).closest?.('[data-share]') as HTMLElement | null
+        if (!btn) return
+        const box = btn.closest('[data-share-url]') as HTMLElement
+        const url = box.dataset.shareUrl || location.href
+        const title = box.dataset.shareTitle || document.title
+        if (btn.dataset.share === 'native' && navigator.share) {
+          try { await navigator.share({ title, url }) } catch {}
+          return
+        }
+        try {
+          await navigator.clipboard.writeText(url)
+          const old = btn.textContent
+          btn.textContent = '복사되었습니다'
+          setTimeout(() => { btn.textContent = old }, 1600)
+        } catch {
+          window.prompt('링크를 복사하십시오', url)
+        }
+      })
+    </script>
+    <script>
       // 앨범 사진 확대 보기: 페이지 전환(swup) 후에도 동작하도록 문서 전체에 위임
       let lbList: HTMLAnchorElement[] = []
       let lbIdx = 0

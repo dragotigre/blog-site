@@ -8,6 +8,7 @@ interface Props {
   title?: string
   desc?: string
   banner?: ImageMetadata
+  cover?: string
 }
 
 const props = Astro.props
@@ -57,7 +58,8 @@ const openGraph: SEOProps['openGraph'] = {
 
 async function getOptimizedImageURL() {
   const image = props.banner && (await getImage({ src: props.banner, format: 'jpeg' }))
-  return new URL(image?.src ?? withBase('/placeholder.png'), Astro.url).toString()
+  const cover = props.cover ? withBase(`/album/${props.cover.split('/').map(encodeURIComponent).join('/')}`) : undefined
+  return new URL(image?.src ?? cover ?? withBase('/og.jpg'), Astro.url).toString()
 }
 ---
 

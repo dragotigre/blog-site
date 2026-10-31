@@ -1,5 +1,6 @@
 export const LANGUAGES = {
   'ko-kr': {
+    Search: '검색',
     Album: '앨범',
     Home: '홈',
     Posts: '글',
@@ -25,6 +26,7 @@ export const LANGUAGES = {
     next_post: '다음 글',
   },
   'zh-cn': {
+    Search: '搜索',
     Album: '相册',
     Home: '首页',
     Posts: '文章',
@@ -50,6 +52,7 @@ export const LANGUAGES = {
     next_post: '下一篇',
   },
   'en-us': {
+    Search: 'Search',
     Album: 'Album',
     Home: 'Home',
     Posts: 'Posts',
@@ -75,6 +78,7 @@ export const LANGUAGES = {
     next_post: 'Next post',
   },
   'zh-tw': {
+    Search: '搜尋',
     Album: '相簿',
     Home: '首頁',
     Posts: '文章',
@@ -100,6 +104,7 @@ export const LANGUAGES = {
     next_post: '下一篇',
   },
   'ja-jp': {
+    Search: '検索',
     Album: 'アルバム',
     Home: 'ホーム',
     Posts: '投稿',

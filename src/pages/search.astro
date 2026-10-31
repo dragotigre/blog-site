@@ -1,0 +1,73 @@
+---
+import LayoutDefault from '~/layouts/LayoutDefault.astro'
+import { withBase } from '~/utils'
+
+const { translate: t } = Astro.locals
+const base = withBase('/')
+---
+
+<LayoutDefault>
+  <header flex="~ col gap-2">
+    <h1 class="post-title"><a class="not-prose">{t('Search')}</a></h1>
+    <div class="text-3.5">글 제목과 본문에서 찾습니다.</div>
+  </header>
+  <div id="search" class="mt-6" data-base={base}></div>
+  <noscript>검색에는 자바스크립트가 필요합니다.</noscript>
+  <link rel="stylesheet" href={withBase('/pagefind/pagefind-ui.css')} />
+  <script is:inline>
+    (function () {
+      var el = document.getElementById('search')
+      var base = el.getAttribute('data-base')
+      var s = document.createElement('script')
+      s.src = base + 'pagefind/pagefind-ui.js'
+      s.onload = function () {
+        new PagefindUI({
+          element: '#search',
+          showImages: false,
+          showSubResults: false,
+          resetStyles: false,
+          baseUrl: base,
+          translations: {
+            placeholder: '검색어를 입력하십시오',
+            clear_search: '지우기',
+            load_more: '결과 더 보기',
+            search_label: '검색',
+            zero_results: '[SEARCH_TERM]에 대한 결과가 없습니다',
+            many_results: '[COUNT]개의 결과 ([SEARCH_TERM])',
+            one_result: '[COUNT]개의 결과 ([SEARCH_TERM])',
+            searching: '[SEARCH_TERM] 검색 중...',
+            alt_search: '[SEARCH_TERM]에 대한 결과가 없어 [DIFFERENT_TERM] 결과를 표시합니다',
+            search_suggestion: '[SEARCH_TERM]에 대한 결과가 없습니다. 다음을 시도해 보십시오',
+            filters_label: '필터',
+            element_option_label: '요소',
+            keyboard_navigate: '이동',
+            keyboard_select: '선택',
+            keyboard_clear: '지우기',
+            keyboard_close: '닫기',
+            discussion_option_label: '토론',
+            result_label: '결과',
+            results_label: '결과',
+          },
+        })
+      }
+      document.head.appendChild(s)
+    })()
+  </script>
+
+</LayoutDefault>
+
+<style is:global>
+  #search {
+    --pagefind-ui-scale: 0.95;
+    --pagefind-ui-primary: var(--uno-colors-primary);
+    --pagefind-ui-text: var(--uno-colors-primary);
+    --pagefind-ui-background: #fffdf9;
+    --pagefind-ui-border: color-mix(in srgb, var(--uno-colors-primary) 25%, transparent);
+    --pagefind-ui-tag: color-mix(in srgb, var(--uno-colors-primary) 10%, transparent);
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 6px;
+    --pagefind-ui-font: var(--uno-fonts-ui), sans-serif;
+  }
+  #search .pagefind-ui__result-link { text-decoration: underline; }
+  #search mark { background: rgba(224, 161, 115, 0.35); color: inherit; }
+</style>

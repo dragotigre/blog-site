@@ -41,3 +41,24 @@ html {
 }
 .prose h1, .prose h2, .prose h3, .prose h4, .prose a, .prose strong, .prose th, .prose td, .prose blockquote { color: var(--uno-colors-primary); }
 main a, article a, h2 a { color: var(--uno-colors-primary); }
+
+/* 글 읽기·태그 */
+.post-read { opacity: .65; font-size: .85em; }
+.post-tags, .tag-cloud { display: flex; flex-wrap: wrap; gap: .4rem; }
+.tag-cloud { margin-top: 1rem; }
+.post-tag { display: inline-flex; align-items: baseline; gap: .3rem; padding: .15rem .65rem; border-radius: 999px; font-size: .8rem; text-decoration: none !important;
+  background: color-mix(in srgb, var(--uno-colors-primary) 10%, transparent); color: var(--uno-colors-primary) !important; }
+.post-tag::before { content: '#'; opacity: .5; }
+.post-tag small { opacity: .6; font-size: .75em; }
+.post-tag:hover { background: var(--uno-colors-primary) !important; color: var(--uno-colors-background) !important; }
+.post-cover { width: 100%; max-height: 420px; object-fit: cover; display: block; margin: 1rem 0; }
+.toc { margin: 1.2rem 0; padding: .7rem 1rem; border: 1px solid color-mix(in srgb, var(--uno-colors-primary) 18%, transparent); background: color-mix(in srgb, var(--uno-colors-primary) 4%, transparent); font-size: .9rem; }
+.toc summary { cursor: pointer; font-weight: 700; }
+.toc ol { margin: .5rem 0 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: .25rem; }
+.toc li.d3 { margin-left: 1rem; list-style: circle; }
+.related { margin-top: 2.2rem; padding-top: 1rem; border-top: 1px solid color-mix(in srgb, var(--uno-colors-primary) 20%, transparent); }
+.related h3 { margin: 0 0 .5rem; font-size: 1rem; }
+.related ul { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: .3rem; }
+.share { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: 2rem; font-size: .85rem; }
+.share button, .share a.share-btn { padding: .3rem .8rem; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--uno-colors-primary) 30%, transparent); background: transparent; color: var(--uno-colors-primary); cursor: pointer; text-decoration: none !important; font: inherit; font-size: .8rem; }
+.share button:hover, .share a.share-btn:hover { background: var(--uno-colors-primary); color: var(--uno-colors-background); }

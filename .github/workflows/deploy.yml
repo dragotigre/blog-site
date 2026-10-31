@@ -23,8 +23,7 @@ jobs:
         with:
           node-version: 22
       - run: npm ci
-      - run: node scripts/sync-content.mjs
-      - run: npx astro build
+      - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

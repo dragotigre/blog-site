@@ -12,8 +12,9 @@ const { Content } = await render(aboutPost)
 ---
 
 <LayoutDefault>
+  <div data-pagefind-body>
   <header flex="~ col gap-2">
-    <h1 class="post-title">
+    <h1 class="post-title" data-pagefind-meta="title">
       <a class="not-prose">{aboutPost.data.title}</a>
     </h1>
     <div class="text-3.5">
@@ -24,4 +25,5 @@ const { Content } = await render(aboutPost)
   <article class="prose">
     <Content />
   </article>
+  </div>
 </LayoutDefault>

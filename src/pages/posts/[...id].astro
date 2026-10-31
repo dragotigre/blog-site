@@ -1,11 +1,12 @@
 ---
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro'
 import Comments from '~/components/Comments.astro'
+import ShareButtons from '~/components/ShareButtons.astro'
 import Pagination from '~/components/Pagination.astro'
 import SiteSeo from '~/components/SiteSeo.astro'
 import LayoutDefault from '~/layouts/LayoutDefault.astro'
 import LayoutPost from '~/layouts/LayoutPost.astro'
-import { getPosts, withBase } from '~/utils'
+import { coverUrl, getPosts, getRelatedPosts, withBase } from '~/utils'
 import { render } from 'astro:content'
 
 export const getStaticPaths = (async () => {
@@ -15,7 +16,7 @@ export const getStaticPaths = (async () => {
     const next = posts[idx + 1]
     return {
       params: { id: post.id },
-      props: { entry: post, next, prev },
+      props: { entry: post, next, prev, related: getRelatedPosts(post, posts) },
     }
   })
 }) satisfies GetStaticPaths
@@ -23,8 +24,11 @@ export const getStaticPaths = (async () => {
 // type Params = InferGetStaticParamsType<typeof getStaticPaths>
 type Props = InferGetStaticPropsType<typeof getStaticPaths>
 
-const { entry, prev, next } = Astro.props
-const { Content } = await render(entry)
+const { entry, prev, next, related } = Astro.props
+const { Content, headings } = await render(entry)
+const tocItems = headings.filter(h => h.depth === 2 || h.depth === 3)
+const cover = coverUrl(entry.data.cover)
+const pageUrl = new URL(withBase(`/posts/${entry.id}/`), Astro.site).toString()
 const { translate: t } = Astro.locals
 
 function getUrl(id: string) {
@@ -33,11 +37,22 @@ function getUrl(id: string) {
 ---
 
 <LayoutDefault>
-  <SiteSeo slot="seo" title={entry.data.title} desc={entry.data.description} banner={entry.data.banner} />
+  <SiteSeo slot="seo" title={entry.data.title} desc={entry.data.description} banner={entry.data.banner} cover={entry.data.cover} />
 
-  <LayoutPost post={entry}>
-    <Content />
-  </LayoutPost>
+  <div data-pagefind-body>
+    <LayoutPost post={entry} detail>
+      {cover && <img class="post-cover not-prose" src={cover} alt={entry.data.title} />}
+      {tocItems.length >= 3 && (
+        <details class="toc not-prose" open data-pagefind-ignore>
+          <summary>목차</summary>
+          <ol>
+            {tocItems.map(h => <li class={h.depth === 3 ? 'd3' : ''}><a href={`#${h.slug}`}>{h.text}</a></li>)}
+          </ol>
+        </details>
+      )}
+      <Content />
+    </LayoutPost>
+  </div>
 
   <Pagination
     showLeft={Boolean(prev)}
@@ -49,6 +64,15 @@ function getUrl(id: string) {
     showPageCount={false}
   />
   <!-- BUG 这里使用 client:visible 会导致构建失败。ref: https://github.com/withastro/astro/issues/7329 -->
+  <ShareButtons title={entry.data.title} url={pageUrl} />
+  {related.length > 0 && (
+    <section class="related">
+      <h3>관련 글</h3>
+      <ul>
+        {related.map(r => <li><a href={withBase(`/posts/${r.id}/`)}>{r.data.title}</a></li>)}
+      </ul>
+    </section>
+  )}
   <Comments post={entry} />
 </LayoutDefault>
 

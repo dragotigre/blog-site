@@ -1,0 +1,17 @@
+---
+interface Props {
+  title: string
+  url: string
+}
+const { title, url } = Astro.props
+const u = encodeURIComponent(url)
+const t = encodeURIComponent(title)
+---
+
+<div class="share" data-share-url={url} data-share-title={title}>
+  <span>공유</span>
+  <button type="button" data-share="copy">링크 복사</button>
+  <button type="button" data-share="native">기기로 공유</button>
+  <a class="share-btn" href={`https://www.facebook.com/sharer/sharer.php?u=${u}`} target="_blank" rel="noopener">페이스북</a>
+  <a class="share-btn" href={`https://twitter.com/intent/tweet?url=${u}&text=${t}`} target="_blank" rel="noopener">X</a>
+</div>

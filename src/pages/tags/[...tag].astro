@@ -1,0 +1,34 @@
+---
+import LayoutDefault from '~/layouts/LayoutDefault.astro'
+import type { Post } from '~/types'
+import { formatDate, getTags, withBase } from '~/utils'
+
+export async function getStaticPaths() {
+  const tags = await getTags()
+  return Array.from(tags).map(([key, value]) => ({
+    params: { tag: key },
+    props: { posts: value, name: key },
+  }))
+}
+
+const { posts, name } = Astro.props
+const items = posts.map((post: Post) => ({
+  title: post.data.title,
+  href: withBase(`/posts/${post.id}/`),
+  date: formatDate(post.data.pubDate),
+}))
+---
+
+<LayoutDefault>
+  <section>
+    <h2 class="post-title">태그: {name}</h2>
+    <ul class="pl-6 py-3" flex="~ col gap-4">
+      {items.map(({ title, href, date }) => (
+        <li>
+          <h3 class="post-title"><a href={href}>{title}</a></h3>
+          <time>{date}</time>
+        </li>
+      ))}
+    </ul>
+  </section>
+</LayoutDefault>

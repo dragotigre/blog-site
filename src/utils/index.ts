@@ -69,3 +69,43 @@ export function withBase(path: string) {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '')
   return `${base}${path}`
 }
+
+export async function getTags() {
+  const posts = await getPosts()
+  const tags = new Map<string, Post[]>()
+  for (const post of posts) {
+    for (const tag of post.data.tags ?? []) {
+      const list = tags.get(tag) || []
+      list.push(post)
+      tags.set(tag, list)
+    }
+  }
+  return tags
+}
+
+export function getRelatedPosts(post: Post, all: Post[], limit = 3) {
+  const tags = new Set(post.data.tags ?? [])
+  const cats = new Set(post.data.categories ?? [])
+  return all
+    .filter(p => p.id !== post.id)
+    .map((p) => {
+      const score = (p.data.tags ?? []).filter(t => tags.has(t)).length * 2
+        + (p.data.categories ?? []).filter(c => cats.has(c)).length
+      return { p, score }
+    })
+    .filter(x => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map(x => x.p)
+}
+
+// 한글 기준 분당 약 500자
+export function getReadingMinutes(body: string | undefined) {
+  const text = (body ?? '').replace(/```[\s\S]*?```/g, '').replace(/[#>*_`|\-\[\]()!]/g, '').replace(/\s+/g, '')
+  return Math.max(1, Math.ceil(text.length / 500))
+}
+
+export function coverUrl(cover: string | undefined) {
+  if (!cover) return undefined
+  return withBase(`/album/${cover.split('/').map(encodeURIComponent).join('/')}`)
+}

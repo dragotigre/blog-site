@@ -18,9 +18,19 @@ function parse(text) {
   const m = text.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/)
   if (!m) return { data: {}, body: text }
   const data = {}
+  let lastKey = null
   for (const line of m[1].split('\n')) {
     const kv = line.match(/^([A-Za-z_가-힣]+):\s*(.*)$/)
-    if (kv) data[kv[1]] = kv[2].trim()
+    if (kv) {
+      data[kv[1]] = kv[2].trim()
+      lastKey = kv[1]
+      continue
+    }
+    const item = line.match(/^\s*-\s+(.*)$/) // YAML 블록 목록
+    if (item && lastKey) {
+      const cur = data[lastKey] ? data[lastKey].replace(/^\[|\]$/g, '') + ', ' : ''
+      data[lastKey] = `[${cur}${item[1].trim()}]`
+    }
   }
   return { data, body: m[2] }
 }
@@ -88,6 +98,8 @@ for (const file of files) {
   if (!cats.length) cats = list(data.category)
   if (!cats.length) cats = ['기록']
   const desc = unquote(data.description)
+  const tags = list(data.tags)
+  const cover = unquote(data.cover).replace(/\.[A-Za-z0-9]+$/, '.jpg')
   const name = rel.replace(/\.md$/, '').split(path.sep).join('-')
   const fm = [
     '---',
@@ -95,6 +107,8 @@ for (const file of files) {
     `pubDate: ${date}`,
     `categories: ${JSON.stringify(cats)}`,
     desc ? `description: ${yamlStr(desc)}` : null,
+    tags.length ? `tags: ${JSON.stringify(tags)}` : null,
+    cover ? `cover: ${yamlStr(cover)}` : null,
     '---',
   ].filter(Boolean).join('\n')
   fs.writeFileSync(path.join(postsDir, `${name}.md`), `${fm}\n\n${out}\n`)

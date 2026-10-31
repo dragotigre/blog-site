@@ -1,0 +1,20 @@
+---
+import LayoutDefault from '~/layouts/LayoutDefault.astro'
+import { getTags, withBase } from '~/utils'
+
+const { translate: t } = Astro.locals
+const tags = await getTags()
+const list = Array.from(tags).sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0], 'ko'))
+---
+
+<LayoutDefault>
+  <section>
+    <h2 class="post-title">{t('Tags')}</h2>
+    {list.length === 0 && <p class="mt-4">아직 태그가 없습니다.</p>}
+    <div class="tag-cloud">
+      {list.map(([tag, posts]) => (
+        <a class="post-tag not-prose" href={withBase(`/tags/${encodeURIComponent(tag)}/`)}>{tag}<small>{posts.length}</small></a>
+      ))}
+    </div>
+  </section>
+</LayoutDefault>
