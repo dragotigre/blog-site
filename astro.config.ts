@@ -13,7 +13,7 @@ import { themeConfig } from './src/.config'
 export default defineConfig({
   site: themeConfig.site.website,
   prefetch: true,
-  base: '/blog-site',
+  base: '/',
   vite: {
     plugins: [
       // eslint-disable-next-line ts/ban-ts-comment
