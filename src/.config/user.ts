@@ -6,7 +6,7 @@ export const userConfig: Partial<UserConfig> = {
     subtitle: 'Rehabilitation',
     author: '정용범',
     description: '재활 임상과 교육, 방문재활에 대한 기록',
-    website: 'https://dragotigre.github.io',
+    website: 'https://900518.me',
     pageSize: 6,
     socialLinks: [
       { name: 'github', href: 'https://github.com/dragotigre' },
