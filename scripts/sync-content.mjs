@@ -62,7 +62,7 @@ function figureFor(target, extra) {
   const key = keyOf(target)
   const found = imageIndex.get(key)
   if (!found) {
-    console.warn(`[사진 없음] ${target} -> 블로그/글 폴더(또는 하위 폴더)에 넣어 주십시오`)
+    console.warn(`[사진 없음] ${target} -> 블로그/서재 폴더(또는 하위 폴더)에 넣어 주십시오`)
     return ''
   }
   fs.mkdirSync(imgOut, { recursive: true })
@@ -152,6 +152,13 @@ for (const file of files) {
   let cats = list(data.categories)
   if (!cats.length) cats = list(data.category)
   if (!cats.length) cats = ['기록']
+  // 블로그/일지/<주제>/ 아래 글은 일지로 분류합니다.
+  const parts = rel.split(path.sep)
+  const journal = parts[0] === '일지' && parts.length >= 3 ? parts[1] : ''
+  if (journal) cats = [journal]
+  // 블로그/서재/<카테고리>/ 아래 노트는 폴더 이름을 카테고리로 사용합니다(속성에 categories가 있으면 그 값을 우선).
+  const shelfCat = parts[0] === '서재' && parts.length >= 3 ? parts[1] : ''
+  if (shelfCat && !list(data.categories).length && !list(data.category).length) cats = [shelfCat]
   const desc = unquote(data.description)
   const tags = list(data.tags)
   const cover = unquote(data.cover).replace(/\.[A-Za-z0-9]+$/, '.jpg')
@@ -164,6 +171,7 @@ for (const file of files) {
     desc ? `description: ${yamlStr(desc)}` : null,
     tags.length ? `tags: ${JSON.stringify(tags)}` : null,
     cover ? `cover: ${yamlStr(cover)}` : null,
+    journal ? `journal: ${yamlStr(journal)}` : null,
     '---',
   ].filter(Boolean).join('\n')
   fs.writeFileSync(path.join(postsDir, `${name}.md`), `${fm}\n\n${out}\n`)
@@ -190,4 +198,4 @@ if (!about) {
     fs.writeFileSync(path.join(specDir, 'about.md'), '---\ntitle: "소개"\npubDate: 2026-01-01\n---\n')
   }
 }
-console.log(`글 ${posts}편 변환${about ? ', 소개 페이지 갱신' : ''}, 사진 ${photos}장`)
+console.log(`서재 ${posts}편 변환${about ? ', 소개 페이지 갱신' : ''}, 사진 ${photos}장`)

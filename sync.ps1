@@ -106,7 +106,7 @@ Get-ChildItem $src -Recurse -File | ForEach-Object {
 
   if ($_.Name -eq "블로그 홈.md") { return }   # 이전 Quartz 용 홈 파일은 사용하지 않음
 
-  if ($rel -match '^글[\\/]' -and $_.Extension -match '^\.(jpe?g|png|webp|bmp)$') {
+  if ($rel -match '^서재[\\/]' -and $_.Extension -match '^\.(jpe?g|png|webp|bmp)$') {
     $target = Join-Path $dst ((Split-Path $rel -Parent) + '\' + [IO.Path]::GetFileNameWithoutExtension($_.Name) + '.jpg')
     New-Item -ItemType Directory (Split-Path $target -Parent) -Force | Out-Null
     try { Save-Resized $_.FullName $target } catch { Write-Host "축소 실패, 원본 복사: $($_.Name)"; Copy-Item $_.FullName $target }

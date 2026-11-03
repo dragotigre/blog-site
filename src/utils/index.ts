@@ -21,8 +21,8 @@ export async function getCategories() {
   return categories
 }
 
-export async function getPosts(isArchivePage = false) {
-  const posts = await getCollection('posts')
+export async function getPosts(isArchivePage = false, withJournal = false) {
+  const posts = (await getCollection('posts')).filter(p => withJournal || !p.data.journal)
 
   posts.sort((a, b) => {
     if (isArchivePage) {
@@ -108,4 +108,10 @@ export function getReadingMinutes(body: string | undefined) {
 export function coverUrl(cover: string | undefined) {
   if (!cover) return undefined
   return withBase(`/album/${cover.split('/').map(encodeURIComponent).join('/')}`)
+}
+
+// 일지 글: 주제별로 묶어 최신순으로 돌려줍니다.
+export async function getJournalPosts() {
+  const all = await getPosts(true, true)
+  return all.filter(p => p.data.journal)
 }

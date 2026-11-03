@@ -13,11 +13,12 @@ export const userConfig: Partial<UserConfig> = {
       { name: 'rss', href: '/atom.xml' },
     ],
     navLinks: [
-      { name: 'Posts', href: '/' },
+      { name: '서재', href: '/' },
       { name: 'Archive', href: '/archive' },
       { name: 'Categories', href: '/categories' },
       { name: 'Tags', href: '/tags' },
       { name: 'Album', href: '/album' },
+      { name: '일지', href: '/journal' },
       { name: 'Search', href: '/search' },
       { name: 'About', href: '/about' },
     ],

@@ -1,0 +1,46 @@
+---
+import type { GetStaticPaths } from 'astro'
+import { JOURNAL } from '~/.config/journal'
+import LayoutDefault from '~/layouts/LayoutDefault.astro'
+import { coverUrl, formatDate, getJournalPosts, withBase } from '~/utils'
+
+export const getStaticPaths = (async () => {
+  const posts = await getJournalPosts()
+  const names = [...new Set([...JOURNAL.topics, ...posts.map(p => p.data.journal as string)])]
+  return names.map(name => ({
+    params: { topic: name },
+    props: { name, posts: posts.filter(p => p.data.journal === name) },
+  }))
+}) satisfies GetStaticPaths
+
+const { name, posts } = Astro.props
+---
+
+<LayoutDefault>
+  <section>
+    <p class="journal-back"><a href={withBase('/journal/')}>← {JOURNAL.title}</a></p>
+    <h2 class="post-title">{name}</h2>
+    {
+      posts.length === 0
+        ? <p style="opacity:.7">아직 글이 없습니다.</p>
+        : (
+            <ul class="pl-6 py-3" flex="~ col gap-4">
+              {
+                posts.map(post => (
+                  <li>
+                    <h3 class="post-title">
+                      <a href={withBase(`/posts/${post.id}/`)}>{post.data.title}</a>
+                    </h3>
+                    <time>{formatDate(post.data.pubDate)}</time>
+                  </li>
+                ))
+              }
+            </ul>
+          )
+    }
+  </section>
+</LayoutDefault>
+
+<style is:global>
+  .journal-back { font-size: .85em; opacity: .7; margin-bottom: .4rem; }
+</style>

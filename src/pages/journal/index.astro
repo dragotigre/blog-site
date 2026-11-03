@@ -1,0 +1,51 @@
+---
+import { JOURNAL } from '~/.config/journal'
+import LayoutDefault from '~/layouts/LayoutDefault.astro'
+import { formatDate, getJournalPosts, withBase } from '~/utils'
+
+const posts = await getJournalPosts()
+const found = new Set(posts.map(p => p.data.journal as string))
+const topics = [...JOURNAL.topics, ...[...found].filter(t => !JOURNAL.topics.includes(t))]
+const cards = topics.map((name) => {
+  const list = posts.filter(p => p.data.journal === name)
+  return {
+    name,
+    count: list.length,
+    href: withBase(`/journal/${encodeURIComponent(name)}/`),
+    latest: list[0],
+  }
+})
+---
+
+<LayoutDefault>
+  <section>
+    <h2 class="post-title">{JOURNAL.title}</h2>
+    <p class="journal-desc">{JOURNAL.description}</p>
+    <ul class="journal-grid">
+      {
+        cards.map(c => (
+          <li class="journal-card">
+            <a class="journal-card-link" href={c.href}>
+              <span class="journal-name">{c.name}</span>
+              <span class="journal-count">{c.count}편</span>
+              <span class="journal-latest">
+                {c.latest ? `${c.latest.data.title} · ${formatDate(c.latest.data.pubDate)}` : '아직 글이 없습니다'}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</LayoutDefault>
+
+<style is:global>
+  .journal-desc { opacity: 0.7; margin: 0.4rem 0 1.4rem; }
+  .journal-grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+  .journal-card { border: 1px solid rgba(128,128,128,.28); border-radius: 12px; transition: transform .15s ease, border-color .15s ease; }
+  .journal-card:hover { transform: translateY(-2px); border-color: #c9a77c; }
+  .journal-card-link { display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; text-decoration: none !important; }
+  .journal-name { font-weight: 800; font-size: 1.15em; }
+  .journal-count { opacity: .7; font-size: .85em; }
+  .journal-latest { opacity: .6; font-size: .8em; line-height: 1.4; }
+</style>
