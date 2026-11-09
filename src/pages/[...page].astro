@@ -24,6 +24,16 @@ const { page } = Astro.props
 ---
 
 <LayoutDefault>
+  {
+    page.currentPage === 1 && (
+      <figure style="margin:0 0 2.2rem;padding:0 0 1.4rem;border-bottom:1px solid color-mix(in srgb, currentColor 18%, transparent);text-align:center;line-height:1.8">
+        <p style="margin:0;font-size:1.05em">내가 더 멀리 보았다면, 그것은 거인들의 어깨 위에 서 있었기 때문이다.</p>
+        <p lang="en" style="margin:.35rem 0 0;font-size:.92em;opacity:.75"><em>If I have seen further, it is by standing on the shoulders of giants.</em></p>
+        <p lang="la" style="margin:.2rem 0 0;font-size:.92em;opacity:.75"><em>Si quid ulterius vidi, id eo factum est quod super umeros gigantum steti.</em></p>
+        <figcaption style="margin-top:.5rem;font-size:.8em;opacity:.6">— Isaac Newton</figcaption>
+      </figure>
+    )
+  }
   <section contain-layout flex="~ col gap-7.5">
     {
       page.data.map((post) => (
